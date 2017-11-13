@@ -4,6 +4,10 @@ import (
 	"sync"
 )
 
+var (
+	stats = New()
+)
+
 type Stats struct {
 	*sync.RWMutex
 	items map[string]int64
@@ -46,4 +50,16 @@ func (stats *Stats) Get() map[string]int64 {
 	}
 
 	return cloned
+}
+
+func Increase(key string) {
+	stats.Increase(key)
+}
+
+func Decrease(key string) {
+	stats.Decrease(key)
+}
+
+func Get() map[string]int64 {
+	return stats.Get()
 }
