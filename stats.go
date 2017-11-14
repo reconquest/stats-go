@@ -10,13 +10,13 @@ var (
 
 type Stats struct {
 	*sync.RWMutex
-	items map[string]int64
+	items map[string]int
 }
 
 func New() *Stats {
 	return &Stats{
 		RWMutex: &sync.RWMutex{},
-		items:   map[string]int64{},
+		items:   map[string]int{},
 	}
 }
 
@@ -25,6 +25,13 @@ func (stats *Stats) Increase(key string) {
 	defer stats.Unlock()
 
 	stats.items[key] += 1
+}
+
+func (stats *Stats) IncreaseMany(key string, many int) {
+	stats.Lock()
+	defer stats.Unlock()
+
+	stats.items[key] += many
 }
 
 func (stats *Stats) Decrease(key string) {
@@ -39,8 +46,20 @@ func (stats *Stats) Decrease(key string) {
 	}
 }
 
-func (stats *Stats) Get() map[string]int64 {
-	cloned := map[string]int64{}
+func (stats *Stats) DecreaseMany(key string, many int) {
+	stats.Lock()
+	defer stats.Unlock()
+
+	value, _ := stats.items[key]
+	if value > 0 && value-many >= 0 {
+		stats.items[key] = value - many
+	} else {
+		stats.items[key] = 0
+	}
+}
+
+func (stats *Stats) Get() map[string]int {
+	cloned := map[string]int{}
 
 	stats.RLock()
 	defer stats.RUnlock()
@@ -56,10 +75,14 @@ func Increase(key string) {
 	stats.Increase(key)
 }
 
-func Decrease(key string) {
-	stats.Decrease(key)
+func IncreaseMany(key string, many int) {
+	stats.IncreaseMany(key, many)
 }
 
-func Get() map[string]int64 {
+func DecreaseMany(key string, many int) {
+	stats.DecreaseMany(key, many)
+}
+
+func Get() map[string]int {
 	return stats.Get()
 }
