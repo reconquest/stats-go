@@ -79,6 +79,10 @@ func IncreaseMany(key string, many int) {
 	stats.IncreaseMany(key, many)
 }
 
+func Decrease(key string) {
+	stats.Decrease(key)
+}
+
 func DecreaseMany(key string, many int) {
 	stats.DecreaseMany(key, many)
 }
