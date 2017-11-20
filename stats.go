@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	stats = New()
+	stats = NewStats()
 )
 
 type Stats struct {
@@ -13,7 +13,7 @@ type Stats struct {
 	items map[string]int
 }
 
-func New() *Stats {
+func NewStats() *Stats {
 	return &Stats{
 		RWMutex: &sync.RWMutex{},
 		items:   map[string]int{},
