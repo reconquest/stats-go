@@ -10,7 +10,7 @@ import (
 func TestPercnetileDuration(t *testing.T) {
 	test := assert.New(t)
 
-	avg := NewPercentileDuration()
+	avg := NewPercentileDuration(0)
 	avg.Push(time.Second * 4)
 	avg.Push(time.Second * 3)
 	avg.Push(time.Second * 2)

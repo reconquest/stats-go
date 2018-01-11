@@ -10,7 +10,7 @@ import (
 func TestAverageDuration_CalculatesAverage(t *testing.T) {
 	test := assert.New(t)
 
-	avg := NewAverageDuration()
+	avg := NewAverageDuration(0)
 	avg.Push(time.Second)
 	avg.Push(time.Second * 3)
 	avg.Push(time.Second * 2)

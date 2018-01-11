@@ -7,14 +7,16 @@ import (
 
 type AverageDuration struct {
 	*sync.Mutex
-	name  string
-	items []time.Duration
+	name     string
+	items    []time.Duration
+	capacity int
 }
 
-func NewAverageDuration() *AverageDuration {
+func NewAverageDuration(capacity int) *AverageDuration {
 	average := &AverageDuration{
-		Mutex: &sync.Mutex{},
-		items: []time.Duration{},
+		Mutex:    &sync.Mutex{},
+		items:    []time.Duration{},
+		capacity: capacity,
 	}
 
 	return average
@@ -25,6 +27,9 @@ func (average *AverageDuration) Push(duration time.Duration) {
 	defer average.Unlock()
 
 	average.items = append(average.items, duration)
+	if average.capacity > 0 && len(average.items) > average.capacity {
+		average.items = average.items[1:]
+	}
 }
 
 func (average *AverageDuration) Get(count int) time.Duration {

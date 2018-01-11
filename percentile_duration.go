@@ -9,14 +9,16 @@ import (
 
 type PercentileDuration struct {
 	*sync.Mutex
-	name  string
-	items []time.Duration
+	name     string
+	items    []time.Duration
+	capacity int
 }
 
-func NewPercentileDuration() *PercentileDuration {
+func NewPercentileDuration(capacity int) *PercentileDuration {
 	average := &PercentileDuration{
-		Mutex: &sync.Mutex{},
-		items: []time.Duration{},
+		Mutex:    &sync.Mutex{},
+		items:    []time.Duration{},
+		capacity: capacity,
 	}
 
 	return average
@@ -27,6 +29,9 @@ func (average *PercentileDuration) Push(duration time.Duration) {
 	defer average.Unlock()
 
 	average.items = append(average.items, duration)
+	if average.capacity > 0 && len(average.items) > average.capacity {
+		average.items = average.items[1:]
+	}
 }
 
 func (average *PercentileDuration) Get(count, percents int) time.Duration {
