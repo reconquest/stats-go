@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+// Rate represents how many times counter was increased per given period of
+// time.
 type Rate struct {
 	*sync.Mutex
 	name     string
@@ -12,6 +14,7 @@ type Rate struct {
 	items    []time.Time
 }
 
+// NewRate creates new rate counter for given period of time.
 func NewRate(interval time.Duration) *Rate {
 	rate := &Rate{
 		Mutex:    &sync.Mutex{},
@@ -47,6 +50,7 @@ func (rate *Rate) tick(now time.Time) {
 	}
 }
 
+// Increase counter by 1.
 func (rate *Rate) Increase() {
 	rate.Lock()
 	defer rate.Unlock()
@@ -55,6 +59,8 @@ func (rate *Rate) Increase() {
 	rate.items = append(rate.items, now)
 }
 
+// Get returns number that describes how many times counter was increased per
+// given time period.
 func (rate *Rate) Get() int {
 	rate.Lock()
 	defer rate.Unlock()
