@@ -40,6 +40,7 @@ func (average *PercentileDuration) Get(count, percents int) time.Duration {
 	}
 
 	average.Lock()
+	defer average.Unlock()
 
 	if count == 0 {
 		count = len(average.items)
@@ -48,8 +49,6 @@ func (average *PercentileDuration) Get(count, percents int) time.Duration {
 	}
 
 	items := average.items[len(average.items)-count:]
-
-	average.Unlock()
 
 	if len(items) == 0 {
 		return 0

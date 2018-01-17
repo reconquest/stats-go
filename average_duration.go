@@ -34,6 +34,7 @@ func (average *AverageDuration) Push(duration time.Duration) {
 
 func (average *AverageDuration) Get(count int) time.Duration {
 	average.Lock()
+	defer average.Unlock()
 
 	if count == 0 {
 		count = len(average.items)
@@ -41,9 +42,11 @@ func (average *AverageDuration) Get(count int) time.Duration {
 		count = len(average.items)
 	}
 
-	items := average.items[len(average.items)-count:]
+	if count == 0 {
+		return 0
+	}
 
-	average.Unlock()
+	items := average.items[len(average.items)-count:]
 
 	sum := time.Duration(0)
 	for _, item := range items {

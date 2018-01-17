@@ -23,3 +23,10 @@ func TestAverageDuration_CalculatesAverage(t *testing.T) {
 	test.Equal(time.Second*3/2, avg.Get(2))
 	test.Equal(time.Second*3/2, avg.Get(2))
 }
+
+func TestAverageDuration_DoesntDivideOnZero(t *testing.T) {
+	test := assert.New(t)
+
+	avg := NewAverageDuration(0)
+	test.Equal(time.Duration(0), avg.Get(0))
+}
