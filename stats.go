@@ -89,6 +89,11 @@ func (stats *Stats) Get() map[string]int {
 	return cloned
 }
 
+// Set given value for given key.
+func Set(key string, value int) {
+	stats.Set(key, value)
+}
+
 // Increase counter with given key by 1.
 func Increase(key string) {
 	stats.Increase(key)
