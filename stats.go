@@ -24,6 +24,14 @@ func NewStats() *Stats {
 	}
 }
 
+// Set given value for given key.
+func (stats *Stats) Set(key string, value int) {
+	stats.Lock()
+	defer stats.Unlock()
+
+	stats.items[key] = value
+}
+
 // Increase counter with given key by 1.
 func (stats *Stats) Increase(key string) {
 	stats.Lock()
